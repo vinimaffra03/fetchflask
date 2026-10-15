@@ -76,14 +76,14 @@
   .heart svg{width:100%;height:100%;display:block;overflow:visible}
 
   /* ---------- dança ---------- */
-  #couple{transform-origin:255px 380px}
+  #couple{transform-origin:272px 380px}
   #fox{transform-origin:190px 378px;transition:transform .18s cubic-bezier(.3,1.4,.5,1)}
-  #owl{transform-origin:318px 376px;transition:transform .18s cubic-bezier(.3,1.4,.5,1)}
+  #owl{transform-origin:360px 376px;transition:transform .18s cubic-bezier(.3,1.4,.5,1)}
   #tail{transform-origin:168px 312px}
   #foxHead{transform-origin:198px 226px}
-  #owlWing{transform-origin:288px 300px}
+  #owlWing{transform-origin:296px 304px}
   #owlWing2{transform-origin:356px 296px}
-  #bounce{transform-origin:255px 380px}
+  #bounce{transform-origin:272px 380px}
 
   .idle #tail{animation:swish 3.2s ease-in-out infinite alternate}
   .idle #foxHead{animation:nod 4s ease-in-out infinite}
@@ -101,8 +101,8 @@
   .m-boleo #fox{animation:lean calc(var(--beat)*2) ease-in-out infinite}
   .m-boleo #owlWing2{animation:flap calc(var(--beat)*1) ease-in-out infinite}
 
-  .pose #fox{transform:rotate(9deg)}
-  .pose #owl{transform:translateX(4px) rotate(26deg)}
+  .pose #fox{transform:translateX(6px) rotate(7deg)}
+  .pose #owl{transform:translateX(-10px) rotate(7deg)}
   .pose #tail{transform:rotate(-14deg)}
 
   .hop #bounce{animation:hop .45s cubic-bezier(.3,0,.3,1)}
@@ -124,7 +124,7 @@
     100%{transform:translateX(0)}
   }
   @keyframes giro{0%{transform:scaleX(1)}40%,50%{transform:scaleX(-1) translateY(-6px)}90%,100%{transform:scaleX(1)}}
-  @keyframes ochos{0%,100%{transform:rotate(-13deg)}50%{transform:rotate(13deg)}}
+  @keyframes ochos{0%,100%{transform:rotate(-9deg)}50%{transform:rotate(9deg)}}
   @keyframes ochosFox{0%,100%{transform:rotate(3deg)}50%{transform:rotate(-3deg)}}
   @keyframes boleo{0%{transform:translateY(0)}25%{transform:translateY(-24px) rotate(-9deg)}50%,100%{transform:translateY(0) rotate(0)}}
   @keyframes lean{0%,100%{transform:rotate(0)}25%{transform:rotate(5deg)}}
@@ -143,7 +143,7 @@
 
 
     <div class="stage" id="stage">
-      <svg class="scene idle" id="scene" viewBox="30 100 440 300" role="img" aria-label="Uma raposinha e uma corujinha dançando tango">
+      <svg class="scene idle" id="scene" viewBox="25 60 460 340" role="img" aria-label="Uma raposinha e uma corujinha dançando tango">
         <defs>
           <filter id="rough" x="-10%" y="-10%" width="120%" height="120%">
             <feTurbulence id="turb" type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="1" result="t"/>
@@ -207,8 +207,8 @@
             <path d="M172 336 l6 -2 M168 348 l6 -2 M164 360 l6 -2 M208 340 l5 2 M213 352 l5 2" stroke-width="1" opacity=".7"/>
 
             <!-- braço erguido (mão dada) -->
-            <path d="M206 250 C 230 240 252 216 266 192" stroke-width="12"/>
-            <path d="M206 250 C 230 240 252 216 266 192" stroke="#ece4d3" stroke-width="7.6"/>
+            <path d="M206 250 C 228 236 252 202 264 172" stroke-width="12"/>
+            <path d="M206 250 C 228 236 252 202 264 172" stroke="#ece4d3" stroke-width="7.6"/>
 
             <!-- gravatinha -->
             <path d="M186 224 L 187 240 L 198 232 Z M210 224 L 209 240 L 198 232 Z" fill="#2b2622"/>
@@ -229,39 +229,41 @@
               <path d="M176 174 l6 -3 M174 182 l7 -2 M170 190 l6 -2 M186 166 l5 -3" stroke-width="1.1" opacity=".8"/>
               <path d="M196 212 l4 -6 M202 211 l4 -6 M208 209 l4 -6 M190 212 l3 -5" stroke-width="1" opacity=".7"/>
             </g>
-            <circle cx="267" cy="190" r="6.5" fill="#ece4d3"/>
+            <circle cx="266" cy="168" r="6.5" fill="#ece4d3"/>
           </g>
 
           <!-- ============ CORUJA ============ -->
-          <g id="owl" stroke-width="2.2">
+          <g id="owl" stroke-width="1.47">
+          <g transform="translate(42 0) translate(318 376) scale(1.75) translate(-318 -376)">
             <g id="owlWing2">
               <path d="M356 290 C 382 300 390 334 374 356 C 368 334 360 314 348 302 Z" fill="#ece4d3"/>
-              <path d="M362 304 l10 14 M364 318 l8 14" stroke-width="1.2"/>
+              <path d="M362 304 l10 14 M364 318 l8 14" stroke-width="0.8"/>
             </g>
             <path d="M318 228 C 356 228 368 270 364 312 C 360 352 342 374 318 374 C 294 374 274 352 272 312 C 268 270 280 228 318 228 Z" fill="#ece4d3"/>
             <path d="M290 240 L 282 210 L 304 232 Z" fill="#ece4d3"/>
             <path d="M334 232 L 354 210 L 348 242 Z" fill="#ece4d3"/>
-            <path d="M286 268 C 282 250 296 242 310 248 C 322 240 340 248 338 268" stroke-width="1.5"/>
-            <path d="M282 258 l-6 -2 M282 266 l-7 1 M342 260 l7 -2 M342 268 l7 1" stroke-width="1.2"/>
-            <path d="M289 266 q 8 -7 16 0" stroke-width="2.4"/>
-            <path d="M318 266 q 8 -7 16 0" stroke-width="2.4"/>
+            <path d="M286 268 C 282 250 296 242 310 248 C 322 240 340 248 338 268" stroke-width="1"/>
+            <path d="M282 258 l-6 -2 M282 266 l-7 1 M342 260 l7 -2 M342 268 l7 1" stroke-width="0.8"/>
+            <path d="M289 266 q 8 -7 16 0" stroke-width="1.6"/>
+            <path d="M318 266 q 8 -7 16 0" stroke-width="1.6"/>
             <path d="M306 274 L 317 274 L 311.5 285 Z" fill="#2b2622"/>
-            <path d="M290 280 l3 -4 M295 281 l3 -4 M327 281 l3 -4 M332 280 l3 -4" stroke="#a8383d" stroke-width="1.3"/>
-            <g stroke-width="1.4">
+            <path d="M290 280 l3 -4 M295 281 l3 -4 M327 281 l3 -4 M332 280 l3 -4" stroke="#a8383d" stroke-width="0.87"/>
+            <g stroke-width="0.93">
               <path d="M300 300 l4 5 l4 -5 M314 300 l4 5 l4 -5 M328 300 l4 5 l4 -5"/>
               <path d="M293 314 l4 5 l4 -5 M307 314 l4 5 l4 -5 M321 314 l4 5 l4 -5 M335 314 l4 5 l4 -5"/>
               <path d="M300 328 l4 5 l4 -5 M314 328 l4 5 l4 -5 M328 328 l4 5 l4 -5"/>
               <path d="M307 342 l4 5 l4 -5 M321 342 l4 5 l4 -5"/>
             </g>
-            <path d="M352 320 l8 -3 M350 336 l8 -3 M346 350 l7 -3 M354 304 l7 -3 M338 362 l6 -4 M282 330 l-6 -3 M286 346 l-6 -3 M292 358 l-5 -4" stroke-width="1.1" opacity=".8"/>
-            <path d="M304 372 l-4 9 M309 373 l0 9 M314 372 l4 9 M326 372 l-4 9 M331 373 l0 9 M336 372 l4 9" stroke-width="2"/>
+            <path d="M352 320 l8 -3 M350 336 l8 -3 M346 350 l7 -3 M354 304 l7 -3 M338 362 l6 -4 M282 330 l-6 -3 M286 346 l-6 -3 M292 358 l-5 -4" stroke-width="0.73" opacity=".8"/>
+            <path d="M304 372 l-4 9 M309 373 l0 9 M314 372 l4 9 M326 372 l-4 9 M331 373 l0 9 M336 372 l4 9" stroke-width="1.33"/>
             <!-- florzinha na orelha -->
-            <circle cx="296" cy="226" r="3.2" fill="#a8383d" stroke-width="1.2"/>
-            <path d="M289 222 c 2 -4 6 -4 6 0 M302 220 c 4 0 4 4 0 6 M300 232 c -2 4 -6 3 -5 -1" stroke-width="1.2"/>
+            <circle cx="296" cy="226" r="3.2" fill="#a8383d" stroke-width="0.8"/>
+            <path d="M289 222 c 2 -4 6 -4 6 0 M302 220 c 4 0 4 4 0 6 M300 232 c -2 4 -6 3 -5 -1" stroke-width="0.8"/>
             <g id="owlWing">
-              <path d="M290 302 C 274 280 266 236 268 194 C 282 220 292 262 299 298 Z" fill="#ece4d3"/>
-              <path d="M273 218 l5 9 M275 238 l7 9 M279 258 l7 9 M284 278 l6 8" stroke-width="1.2"/>
+              <path d="M292 308 C 276 298 262 278 262 254 C 278 262 292 280 302 302 Z" fill="#ece4d3"/>
+              <path d="M269 263 l5 6 M277 273 l6 6 M286 283 l6 6" stroke-width="0.8"/>
             </g>
+          </g>
           </g>
 
           </g>
@@ -324,11 +326,11 @@
   }
   function sceneToPage(sx, sy){
     const r = scene.getBoundingClientRect();
-    return [r.left + (sx - 30) / 440 * r.width, r.top + (sy - 100) / 300 * r.height];
+    return [r.left + (sx - 25) / 460 * r.width, r.top + (sy - 60) / 340 * r.height];
   }
   function heartsFromCouple(n = 1, spread = 120){
     for (let i = 0; i < n; i++){
-      const [x, y] = sceneToPage(255 + (Math.random() - .5) * 40, 200 + (Math.random() - .5) * 30);
+      const [x, y] = sceneToPage(268 + (Math.random() - .5) * 40, 150 + (Math.random() - .5) * 30);
       heartAt(x, y, { spread, delay: i * 70 });
     }
   }
