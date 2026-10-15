@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Um tango para a Veve</title>
+<title>Um tango só nosso</title>
 <meta name="description" content="Uma raposinha e uma corujinha dançando tango dentro de uma carta.">
-<meta property="og:title" content="Veve, aceita dançar comigo?">
+<meta property="og:title" content="Um tango só nosso">
 <meta property="og:description" content="Clique para começar a dança ♥">
 <meta name="theme-color" content="#2a1d14">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 30'><path d='M16 28C6 20 1 14 2 8 3 3 9 1 13 4c2 1.5 3 3 3 4 0-1 1-2.5 3-4 4-3 10-1 11 4 1 6-4 12-14 20z' fill='%23a8383d'/></svg>">
@@ -55,13 +55,7 @@
       var(--paper);
     cursor:pointer;
   }
-  .greet{
-    font-size:clamp(42px,9vw,64px);line-height:1;margin:0 0 0 4px;font-weight:600;
-    transform:rotate(-3deg);transform-origin:left;
-  }
-  .greet svg{display:block;width:clamp(150px,35vw,230px);height:auto;margin-top:-4px}
-  .line{font-size:clamp(20px,4.6vw,27px);margin:10px 0 0 6px;transform:rotate(-2deg);opacity:.9}
-  .stage{position:relative;margin-top:4px}
+  .stage{position:relative;margin-top:clamp(24px,5vw,40px)}
   .stage svg.scene{display:block;width:100%;height:auto;overflow:visible}
   .prompt{
     text-align:center;font-size:clamp(25px,6vw,34px);font-weight:600;margin:2px 0 0;
@@ -70,17 +64,6 @@
   .prompt span{display:inline-block;animation:breathe 2.2s ease-in-out infinite}
   .prompt.hide{opacity:0;transform:translateY(6px)}
   @keyframes breathe{50%{transform:scale(1.06) rotate(-1deg)}}
-  .ask{
-    text-align:right;font-size:clamp(28px,6.5vw,38px);margin:4px 8px 0 0;transform:rotate(-4deg);
-    opacity:0;pointer-events:none;transition:opacity 1s;
-  }
-  .ask.show{opacity:1;pointer-events:auto}
-  .ask button{
-    font:inherit;font-size:.75em;color:var(--ink);background:transparent;cursor:pointer;
-    border:2px solid var(--ink);border-radius:255px 15px 225px 15px/15px 225px 15px 255px;
-    padding:0 .6em;margin-left:.3em;transition:transform .2s;
-  }
-  .ask button:hover{transform:scale(1.07) rotate(-3deg)}
   .count{position:absolute;left:clamp(18px,5vw,46px);bottom:clamp(14px,3vw,22px);font-size:20px;opacity:.6}
   .sound{
     position:absolute;top:clamp(16px,4vw,30px);right:clamp(16px,4vw,32px);
@@ -158,10 +141,6 @@
   <main class="paper" id="paper">
     <button class="sound" id="sound" aria-label="Ligar ou desligar o som">♪ som</button>
 
-    <h1 class="greet">Veve,
-      <svg viewBox="0 0 230 24" aria-hidden="true"><path d="M4 20 C 60 8 140 4 226 6" fill="none" stroke="#2b2622" stroke-width="3" stroke-linecap="round"/></svg>
-    </h1>
-    <p class="line" id="line">entre bilhões de estrelas, um tango só para nós.</p>
 
     <div class="stage" id="stage">
       <svg class="scene idle" id="scene" viewBox="30 100 440 300" role="img" aria-label="Uma raposinha e uma corujinha dançando tango">
@@ -292,7 +271,6 @@
     </div>
 
     <p class="prompt" id="prompt"><span>clique para começar a dança ♥</span></p>
-    <p class="ask" id="ask">Aceita dançar comigo? <button id="yes">sim ♥</button></p>
     <span class="count" id="count"></span>
   </main>
 </div>
@@ -303,8 +281,8 @@
   document.documentElement.style.setProperty('--beat', BEAT + 's');
 
   const $ = id => document.getElementById(id);
-  const scene = $('scene'), prompt = $('prompt'), ask = $('ask'), paper = $('paper');
-  const turb = $('turb'), soundBtn = $('sound'), countEl = $('count'), line = $('line');
+  const scene = $('scene'), prompt = $('prompt'), paper = $('paper');
+  const turb = $('turb'), soundBtn = $('sound'), countEl = $('count');
 
   /* ---------- bordas de papel rasgado ---------- */
   function tearEdges(){
@@ -486,7 +464,7 @@
 
   /* ---------- coreografia ---------- */
   const MOVES = ['m-caminata', 'm-ochos', 'm-giro', 'm-boleo'];
-  let state = 'idle', phrase = 0, timers = [], beatTimer = null, answered = false;
+  let state = 'idle', phrase = 0, timers = [], beatTimer = null;
   const later = (ms, fn) => timers.push(setTimeout(fn, ms));
   const setClasses = (...cls) => scene.setAttribute('class', ['scene', ...cls].join(' '));
 
@@ -494,7 +472,6 @@
     ensureAudio();
     state = 'dancing';
     prompt.classList.add('hide');
-    ask.classList.remove('show');
     boilEvery = 140;
     const lead = 0.12;
     if (ctx) schedulePhrase(phrase, ctx.currentTime + lead);
@@ -512,9 +489,6 @@
       state = 'paused'; boilEvery = 260; phrase++;
       prompt.innerHTML = '<span>clique para continuar a dança ♥</span>';
       prompt.classList.remove('hide');
-      if (phrase === 1) line.textContent = 'só tenho olhos pra você.';
-      if (phrase === 2) line.textContent = 'entre boa música, olhares e passos lentos…';
-      if (phrase >= 3 && !answered) ask.classList.add('show');
     });
   }
 
@@ -532,14 +506,6 @@
     }
     timers.forEach(clearTimeout); timers = [];
     startPhrase();
-  });
-
-  $('yes').addEventListener('click', e => {
-    e.stopPropagation();
-    answered = true;
-    ask.innerHTML = 'Então já tenho par pro tango ♥';
-    heartRain(50);
-    if (state !== 'dancing') { timers.forEach(clearTimeout); timers = []; startPhrase(); }
   });
 
   soundBtn.addEventListener('click', e => {
