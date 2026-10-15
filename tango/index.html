@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Um tango para a Veve</title>
+<meta name="description" content="Uma raposinha e uma corujinha dançando tango dentro de uma carta.">
+<meta property="og:title" content="Veve, aceita dançar comigo?">
+<meta property="og:description" content="Clique para começar a dança ♥">
+<meta name="theme-color" content="#2a1d14">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 30'><path d='M16 28C6 20 1 14 2 8 3 3 9 1 13 4c2 1.5 3 3 3 4 0-1 1-2.5 3-4 4-3 10-1 11 4 1 6-4 12-14 20z' fill='%23a8383d'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#2b2622;
+    --paper:#ece4d3;
+    --paper-dark:#d9ccb3;
+    --red:#a8383d;
+    --beat:.5s;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    min-height:100dvh;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Caveat',cursive;color:var(--ink);
+    background:
+      radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 30%, rgba(0,0,0,.65) 100%),
+      repeating-linear-gradient(97deg, rgba(255,220,180,.025) 0 2px, rgba(0,0,0,.05) 2px 5px, rgba(0,0,0,0) 5px 11px),
+      repeating-linear-gradient(95deg, #3a281b 0 40px, #33231a 40px 90px, #3d2a1c 90px 130px),
+      #35251a;
+    overflow-x:hidden;
+    -webkit-tap-highlight-color:transparent;
+    user-select:none;-webkit-user-select:none;
+    padding:16px;
+  }
+  .wrap{
+    width:min(640px, 100%);
+    filter:drop-shadow(0 18px 30px rgba(0,0,0,.55)) drop-shadow(0 2px 3px rgba(0,0,0,.4));
+    transform:rotate(-1.2deg);
+    animation:arrive 1.2s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes arrive{from{opacity:0;transform:translateY(40px) rotate(-4deg)}}
+  .paper{
+    position:relative;
+    padding:clamp(22px,5vw,44px) clamp(18px,5vw,46px) clamp(20px,4vw,34px);
+    background:
+      radial-gradient(ellipse at 18% 12%, rgba(160,130,90,.18), transparent 40%),
+      radial-gradient(ellipse at 85% 80%, rgba(150,120,80,.22), transparent 45%),
+      radial-gradient(circle at 70% 25%, rgba(120,95,60,.10), transparent 18%),
+      radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(120,90,50,.28) 100%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .3  0 0 0 0 .25  0 0 0 0 .2  0 0 0 .16 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+      var(--paper);
+    cursor:pointer;
+  }
+  .greet{
+    font-size:clamp(42px,9vw,64px);line-height:1;margin:0 0 0 4px;font-weight:600;
+    transform:rotate(-3deg);transform-origin:left;
+  }
+  .greet svg{display:block;width:clamp(150px,35vw,230px);height:auto;margin-top:-4px}
+  .line{font-size:clamp(20px,4.6vw,27px);margin:10px 0 0 6px;transform:rotate(-2deg);opacity:.9}
+  .stage{position:relative;margin-top:4px}
+  .stage svg.scene{display:block;width:100%;height:auto;overflow:visible}
+  .prompt{
+    text-align:center;font-size:clamp(25px,6vw,34px);font-weight:600;margin:2px 0 0;
+    min-height:1.3em;transition:opacity .5s, transform .5s;
+  }
+  .prompt span{display:inline-block;animation:breathe 2.2s ease-in-out infinite}
+  .prompt.hide{opacity:0;transform:translateY(6px)}
+  @keyframes breathe{50%{transform:scale(1.06) rotate(-1deg)}}
+  .ask{
+    text-align:right;font-size:clamp(28px,6.5vw,38px);margin:4px 8px 0 0;transform:rotate(-4deg);
+    opacity:0;pointer-events:none;transition:opacity 1s;
+  }
+  .ask.show{opacity:1;pointer-events:auto}
+  .ask button{
+    font:inherit;font-size:.75em;color:var(--ink);background:transparent;cursor:pointer;
+    border:2px solid var(--ink);border-radius:255px 15px 225px 15px/15px 225px 15px 255px;
+    padding:0 .6em;margin-left:.3em;transition:transform .2s;
+  }
+  .ask button:hover{transform:scale(1.07) rotate(-3deg)}
+  .count{position:absolute;left:clamp(18px,5vw,46px);bottom:clamp(14px,3vw,22px);font-size:20px;opacity:.6}
+  .sound{
+    position:absolute;top:clamp(16px,4vw,30px);right:clamp(16px,4vw,32px);
+    font:inherit;font-size:22px;color:var(--ink);background:none;border:none;cursor:pointer;opacity:.75;padding:4px 6px;
+  }
+  .sound s{text-decoration-thickness:2px}
+
+  /* ---------- corações ---------- */
+  .heart{position:fixed;left:0;top:0;width:26px;height:24px;pointer-events:none;z-index:5;will-change:transform,opacity}
+  .heart svg{width:100%;height:100%;display:block;overflow:visible}
+
+  /* ---------- dança ---------- */
+  #couple{transform-origin:255px 380px}
+  #fox{transform-origin:190px 378px;transition:transform .18s cubic-bezier(.3,1.4,.5,1)}
+  #owl{transform-origin:318px 376px;transition:transform .18s cubic-bezier(.3,1.4,.5,1)}
+  #tail{transform-origin:168px 312px}
+  #foxHead{transform-origin:198px 226px}
+  #owlWing{transform-origin:288px 300px}
+  #owlWing2{transform-origin:356px 296px}
+  #bounce{transform-origin:255px 380px}
+
+  .idle #tail{animation:swish 3.2s ease-in-out infinite alternate}
+  .idle #foxHead{animation:nod 4s ease-in-out infinite}
+
+  .dancing #bounce{animation:bounce var(--beat) cubic-bezier(.2,.7,.4,1) infinite}
+  .dancing #tail{animation:swish calc(var(--beat)*2) ease-in-out infinite alternate}
+  .dancing #foxHead{animation:nod calc(var(--beat)*4) ease-in-out infinite}
+  .dancing #owlWing2{animation:flutter calc(var(--beat)*2) ease-in-out infinite}
+
+  .m-caminata #couple{animation:caminata calc(var(--beat)*8) infinite}
+  .m-giro #couple{animation:giro calc(var(--beat)*4) cubic-bezier(.6,0,.3,1) infinite}
+  .m-ochos #owl{animation:ochos calc(var(--beat)*2) cubic-bezier(.6,0,.3,1) infinite}
+  .m-ochos #fox{animation:ochosFox calc(var(--beat)*2) cubic-bezier(.6,0,.3,1) infinite}
+  .m-boleo #owl{animation:boleo calc(var(--beat)*2) cubic-bezier(.3,0,.3,1) infinite}
+  .m-boleo #fox{animation:lean calc(var(--beat)*2) ease-in-out infinite}
+  .m-boleo #owlWing2{animation:flap calc(var(--beat)*1) ease-in-out infinite}
+
+  .pose #fox{transform:rotate(9deg)}
+  .pose #owl{transform:translateX(4px) rotate(26deg)}
+  .pose #tail{transform:rotate(-14deg)}
+
+  .hop #couple{animation:hop .45s cubic-bezier(.3,0,.3,1)}
+
+  @keyframes bounce{0%{transform:translateY(-4px)}35%{transform:translateY(0)}}
+  @keyframes swish{from{transform:rotate(-9deg)}to{transform:rotate(8deg)}}
+  @keyframes nod{0%,100%{transform:rotate(0)}30%{transform:rotate(-4deg)}65%{transform:rotate(3deg)}}
+  @keyframes flutter{0%,100%{transform:rotate(0)}50%{transform:rotate(-12deg)}}
+  @keyframes flap{0%,100%{transform:rotate(0)}50%{transform:rotate(-34deg)}}
+  @keyframes caminata{
+    0%{transform:translateX(0)}
+    12.5%{transform:translateX(-16px) rotate(-1deg);animation-timing-function:cubic-bezier(.6,0,.3,1)}
+    25%{transform:translateX(-34px) rotate(-2deg)}
+    37.5%{transform:translateX(-34px) rotate(0)}
+    50%{transform:translateX(0)}
+    62.5%{transform:translateX(16px) rotate(1deg)}
+    75%{transform:translateX(34px) rotate(2deg)}
+    87.5%{transform:translateX(34px) rotate(0)}
+    100%{transform:translateX(0)}
+  }
+  @keyframes giro{0%{transform:scaleX(1)}40%,50%{transform:scaleX(-1) translateY(-6px)}90%,100%{transform:scaleX(1)}}
+  @keyframes ochos{0%,100%{transform:rotate(-13deg)}50%{transform:rotate(13deg)}}
+  @keyframes ochosFox{0%,100%{transform:rotate(3deg)}50%{transform:rotate(-3deg)}}
+  @keyframes boleo{0%{transform:translateY(0)}25%{transform:translateY(-24px) rotate(-9deg)}50%,100%{transform:translateY(0) rotate(0)}}
+  @keyframes lean{0%,100%{transform:rotate(0)}25%{transform:rotate(5deg)}}
+  @keyframes hop{40%{transform:translateY(-22px) rotate(-2deg)}}
+
+  @media (prefers-reduced-motion: reduce){
+    .wrap{animation:none}
+    .m-giro #couple{animation:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <main class="paper" id="paper">
+    <button class="sound" id="sound" aria-label="Ligar ou desligar o som">♪ som</button>
+
+    <h1 class="greet">Veve,
+      <svg viewBox="0 0 230 24" aria-hidden="true"><path d="M4 20 C 60 8 140 4 226 6" fill="none" stroke="#2b2622" stroke-width="3" stroke-linecap="round"/></svg>
+    </h1>
+    <p class="line" id="line">entre bilhões de estrelas, um tango só para nós.</p>
+
+    <div class="stage" id="stage">
+      <svg class="scene idle" id="scene" viewBox="30 100 440 300" role="img" aria-label="Uma raposinha e uma corujinha dançando tango">
+        <defs>
+          <filter id="rough" x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence id="turb" type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="1" result="t"/>
+            <feDisplacementMap in="SourceGraphic" in2="t" scale="3.2" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+        </defs>
+
+        <g fill="none" stroke="#2b2622" stroke-linecap="round" stroke-linejoin="round" filter="url(#rough)">
+          <!-- estrelinhas -->
+          <g stroke-width="1.6" opacity=".75">
+            <path d="M72 128 l0 14 M65 135 l14 0 M68 130 l8 10 M76 130 l-8 10"/>
+            <path d="M432 118 l0 10 M427 123 l10 0"/>
+            <path d="M404 176 l0 8 M400 180 l8 0"/>
+            <path d="M112 196 l0 7 M108.5 199.5 l7 0"/>
+            <circle cx="360" cy="128" r="1.6" fill="#2b2622"/>
+            <circle cx="150" cy="122" r="1.4" fill="#2b2622"/>
+            <circle cx="452" cy="232" r="1.4" fill="#2b2622"/>
+            <circle cx="48" cy="236" r="1.4" fill="#2b2622"/>
+          </g>
+
+          <!-- chão -->
+          <g stroke-width="1.8">
+            <path d="M48 384 C 140 376 320 388 452 380"/>
+            <path d="M120 392 C 200 388 300 394 380 390" opacity=".55"/>
+            <path d="M70 384 l-4 -16 M76 384 l2 -20 M82 384 l7 -14 M60 384 l-9 -11"/>
+            <path d="M420 382 l-3 -15 M426 382 l3 -19 M432 382 l8 -12"/>
+            <path d="M250 388 l-3 -8 M256 388 l2 -9 M262 388 l5 -7" opacity=".7"/>
+            <path d="M44 384 C 42 350 50 320 62 300" />
+            <path d="M52 340 c -10 -4 -14 -12 -12 -20 c 8 2 12 10 12 20 z M56 318 c 8 -6 16 -6 20 -2 c -6 6 -14 6 -20 2 z M60 304 c -6 -8 -6 -16 -2 -20 c 4 6 4 14 2 20 z" fill="#ece4d3"/>
+            <path d="M458 382 C 462 356 456 334 444 318"/>
+            <path d="M458 352 c 10 -4 16 -12 14 -20 c -8 2 -14 10 -14 20 z M452 332 c -8 -6 -16 -6 -20 -2 c 6 6 14 6 20 2 z" fill="#ece4d3"/>
+          </g>
+
+          <g id="couple">
+          <g id="bounce">
+
+          <!-- ============ RAPOSA ============ -->
+          <g id="fox" stroke-width="2.2">
+            <g id="tail">
+              <path d="M170 318 C 132 334 92 322 80 288 C 70 258 84 230 106 224 C 100 246 106 268 124 282 C 138 294 154 298 172 298 Z" fill="#ece4d3"/>
+              <path d="M106 224 C 92 230 82 246 82 266 C 90 254 96 246 104 242 Z" fill="#2b2622" opacity=".18"/>
+              <path d="M86 270 l10 -8 M90 282 l12 -8 M98 292 l12 -8 M110 300 l11 -7 M122 306 l10 -6 M92 250 l8 -6 M104 278 l10 -7 M114 290 l10 -6 M128 296 l10 -5 M140 304 l10 -5 M150 308 l9 -4" stroke-width="1.2"/>
+            </g>
+
+            <!-- braço que abraça a corujinha -->
+            <path d="M200 268 C 228 290 258 300 292 300" stroke-width="12"/>
+            <path d="M200 268 C 228 290 258 300 292 300" stroke="#ece4d3" stroke-width="7.6"/>
+
+            <!-- pernas -->
+            <path d="M176 318 C 168 344 160 360 150 372" stroke-width="13"/>
+            <path d="M176 318 C 168 344 160 360 150 372" stroke="#ece4d3" stroke-width="8.6"/>
+            <path d="M198 320 C 206 342 216 358 228 370" stroke-width="13"/>
+            <path d="M198 320 C 206 342 216 358 228 370" stroke="#ece4d3" stroke-width="8.6"/>
+            <path d="M136 380 C 136 370 150 368 160 374 C 162 378 156 381 136 380 Z" fill="#2b2622"/>
+            <path d="M222 372 C 232 366 246 370 246 379 C 230 381 222 379 222 372 Z" fill="#2b2622"/>
+
+            <!-- corpo -->
+            <path d="M168 236 C 148 262 148 306 170 332 C 188 346 210 340 218 316 C 228 288 222 256 204 234 Z" fill="#ece4d3"/>
+            <path d="M201 240 l-6 8 l7 4 l-6 8 l7 5 l-6 8 l7 5 l-5 9 l6 6 l-4 10" stroke-width="1.4"/>
+            <path d="M158 262 l9 -5 M156 274 l10 -5 M155 286 l11 -5 M156 298 l11 -5 M159 310 l10 -4 M164 322 l9 -4 M161 268 l6 -3 M158 292 l7 -3" stroke-width="1.1" opacity=".85"/>
+            <path d="M172 336 l6 -2 M168 348 l6 -2 M164 360 l6 -2 M208 340 l5 2 M213 352 l5 2" stroke-width="1" opacity=".7"/>
+
+            <!-- braço erguido (mão dada) -->
+            <path d="M206 250 C 230 240 252 216 266 192" stroke-width="12"/>
+            <path d="M206 250 C 230 240 252 216 266 192" stroke="#ece4d3" stroke-width="7.6"/>
+
+            <!-- gravatinha -->
+            <path d="M186 224 L 187 240 L 198 232 Z M210 224 L 209 240 L 198 232 Z" fill="#2b2622"/>
+            <circle cx="198" cy="232" r="3" fill="#2b2622"/>
+
+            <!-- cabeça -->
+            <g id="foxHead">
+              <path d="M172 178 L 160 136 L 192 160 Z" fill="#ece4d3"/>
+              <path d="M170 168 L 164 146 L 182 160" stroke-width="1.3"/>
+              <path d="M190 158 L 206 124 L 220 164 Z" fill="#ece4d3"/>
+              <path d="M200 154 L 206 134 L 212 156" stroke-width="1.3"/>
+              <path d="M162 198 C 158 174 174 158 196 156 C 214 155 226 166 240 180 C 246 186 246 192 238 196 C 226 202 212 212 196 214 C 178 216 165 210 162 198 Z" fill="#ece4d3"/>
+              <path d="M164 200 l-7 7 l9 -1 l-4 8 l9 -4 l0 7 l8 -6" stroke-width="1.6" fill="#ece4d3"/>
+              <ellipse cx="242" cy="185" rx="4.6" ry="3.4" fill="#2b2622"/>
+              <path d="M201 180 q 7 -7 14 0" stroke-width="2.4"/>
+              <path d="M231 197 q -6 4 -12 1" stroke-width="1.6"/>
+              <path d="M206 192 l3 -5 M211 193 l3 -5 M216 194 l3 -5" stroke="#a8383d" stroke-width="1.4"/>
+              <path d="M176 174 l6 -3 M174 182 l7 -2 M170 190 l6 -2 M186 166 l5 -3" stroke-width="1.1" opacity=".8"/>
+              <path d="M196 212 l4 -6 M202 211 l4 -6 M208 209 l4 -6 M190 212 l3 -5" stroke-width="1" opacity=".7"/>
+            </g>
+            <circle cx="267" cy="190" r="6.5" fill="#ece4d3"/>
+          </g>
+
+          <!-- ============ CORUJA ============ -->
+          <g id="owl" stroke-width="2.2">
+            <g id="owlWing2">
+              <path d="M356 290 C 382 300 390 334 374 356 C 368 334 360 314 348 302 Z" fill="#ece4d3"/>
+              <path d="M362 304 l10 14 M364 318 l8 14" stroke-width="1.2"/>
+            </g>
+            <path d="M318 228 C 356 228 368 270 364 312 C 360 352 342 374 318 374 C 294 374 274 352 272 312 C 268 270 280 228 318 228 Z" fill="#ece4d3"/>
+            <path d="M290 240 L 282 210 L 304 232 Z" fill="#ece4d3"/>
+            <path d="M334 232 L 354 210 L 348 242 Z" fill="#ece4d3"/>
+            <path d="M286 268 C 282 250 296 242 310 248 C 322 240 340 248 338 268" stroke-width="1.5"/>
+            <path d="M282 258 l-6 -2 M282 266 l-7 1 M342 260 l7 -2 M342 268 l7 1" stroke-width="1.2"/>
+            <path d="M289 266 q 8 -7 16 0" stroke-width="2.4"/>
+            <path d="M318 266 q 8 -7 16 0" stroke-width="2.4"/>
+            <path d="M306 274 L 317 274 L 311.5 285 Z" fill="#2b2622"/>
+            <path d="M290 280 l3 -4 M295 281 l3 -4 M327 281 l3 -4 M332 280 l3 -4" stroke="#a8383d" stroke-width="1.3"/>
+            <g stroke-width="1.4">
+              <path d="M300 300 l4 5 l4 -5 M314 300 l4 5 l4 -5 M328 300 l4 5 l4 -5"/>
+              <path d="M293 314 l4 5 l4 -5 M307 314 l4 5 l4 -5 M321 314 l4 5 l4 -5 M335 314 l4 5 l4 -5"/>
+              <path d="M300 328 l4 5 l4 -5 M314 328 l4 5 l4 -5 M328 328 l4 5 l4 -5"/>
+              <path d="M307 342 l4 5 l4 -5 M321 342 l4 5 l4 -5"/>
+            </g>
+            <path d="M352 320 l8 -3 M350 336 l8 -3 M346 350 l7 -3 M354 304 l7 -3 M338 362 l6 -4 M282 330 l-6 -3 M286 346 l-6 -3 M292 358 l-5 -4" stroke-width="1.1" opacity=".8"/>
+            <path d="M304 372 l-4 9 M309 373 l0 9 M314 372 l4 9 M326 372 l-4 9 M331 373 l0 9 M336 372 l4 9" stroke-width="2"/>
+            <!-- florzinha na orelha -->
+            <circle cx="296" cy="226" r="3.2" fill="#a8383d" stroke-width="1.2"/>
+            <path d="M289 222 c 2 -4 6 -4 6 0 M302 220 c 4 0 4 4 0 6 M300 232 c -2 4 -6 3 -5 -1" stroke-width="1.2"/>
+            <g id="owlWing">
+              <path d="M290 302 C 274 280 266 236 268 194 C 282 220 292 262 299 298 Z" fill="#ece4d3"/>
+              <path d="M273 218 l5 9 M275 238 l7 9 M279 258 l7 9 M284 278 l6 8" stroke-width="1.2"/>
+            </g>
+          </g>
+
+          </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <p class="prompt" id="prompt"><span>clique para começar a dança ♥</span></p>
+    <p class="ask" id="ask">Aceita dançar comigo? <button id="yes">sim ♥</button></p>
+    <span class="count" id="count"></span>
+  </main>
+</div>
+
+<script>
+(() => {
+  const BPM = 120, BEAT = 60 / BPM;
+  document.documentElement.style.setProperty('--beat', BEAT + 's');
+
+  const $ = id => document.getElementById(id);
+  const scene = $('scene'), prompt = $('prompt'), ask = $('ask'), paper = $('paper');
+  const turb = $('turb'), soundBtn = $('sound'), countEl = $('count'), line = $('line');
+
+  /* ---------- bordas de papel rasgado ---------- */
+  function tearEdges(){
+    const pts = [], n = 46, j = () => (Math.random() * 1.1).toFixed(2);
+    for (let i = 0; i <= n; i++) pts.push(`${(i / n * 100).toFixed(2)}% ${j()}%`);
+    for (let i = 0; i <= n; i++) pts.push(`${(100 - j() * .8).toFixed(2)}% ${(i / n * 100).toFixed(2)}%`);
+    for (let i = n; i >= 0; i--) pts.push(`${(i / n * 100).toFixed(2)}% ${(100 - j()).toFixed(2)}%`);
+    for (let i = n; i >= 0; i--) pts.push(`${(j() * .8).toFixed(2)}% ${(i / n * 100).toFixed(2)}%`);
+    paper.style.clipPath = `polygon(${pts.join(',')})`;
+  }
+  tearEdges();
+
+  /* ---------- traço "vivo" de desenho à mão ---------- */
+  let seed = 1, boilEvery = 260;
+  (function boil(){ seed = (seed % 6) + 1; turb.setAttribute('seed', seed); setTimeout(boil, boilEvery); })();
+
+  /* ---------- corações ---------- */
+  const HEART = '<svg viewBox="0 0 32 30"><path d="M16 28C6 20 1 14 2 8 3 3 9 1 13 4c2 1.5 3 3 3 4 0-1 1-2.5 3-4 4-3 10-1 11 4 1 6-4 12-14 20z" fill="FILL" stroke="#2b2622" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+  let hearts = 0;
+  function heartAt(x, y, opts = {}){
+    const el = document.createElement('div');
+    el.className = 'heart';
+    const fills = ['rgba(168,56,61,.75)', 'rgba(168,56,61,.45)', 'none', 'rgba(168,56,61,.6)'];
+    el.innerHTML = HEART.replace('FILL', fills[Math.random() * fills.length | 0]);
+    const s = (opts.scale || 1) * (0.6 + Math.random() * 0.8);
+    document.body.appendChild(el);
+    const rise = opts.rise || (140 + Math.random() * 160);
+    const dx = (Math.random() - .5) * (opts.spread || 120);
+    const rot = (Math.random() - .5) * 50;
+    const dur = 2200 + Math.random() * 1600;
+    el.animate([
+      { transform: `translate(${x - 13}px, ${y - 12}px) scale(${s * .3}) rotate(0deg)`, opacity: 0 },
+      { transform: `translate(${x - 13 + dx * .3}px, ${y - 12 - rise * .2}px) scale(${s}) rotate(${rot * .3}deg)`, opacity: 1, offset: .15 },
+      { transform: `translate(${x - 13 - dx * .2}px, ${y - 12 - rise * .6}px) scale(${s}) rotate(${-rot * .4}deg)`, opacity: .9, offset: .6 },
+      { transform: `translate(${x - 13 + dx}px, ${y - 12 - rise}px) scale(${s * .8}) rotate(${rot}deg)`, opacity: 0 }
+    ], { duration: dur, easing: 'cubic-bezier(.2,.6,.4,1)', delay: opts.delay || 0, fill: 'both' }).onfinish = () => el.remove();
+    hearts++;
+    if (hearts > 1) countEl.textContent = `♥ × ${hearts}`;
+  }
+  function sceneToPage(sx, sy){
+    const r = scene.getBoundingClientRect();
+    return [r.left + (sx - 30) / 440 * r.width, r.top + (sy - 100) / 300 * r.height];
+  }
+  function heartsFromCouple(n = 1, spread = 120){
+    for (let i = 0; i < n; i++){
+      const [x, y] = sceneToPage(255 + (Math.random() - .5) * 40, 200 + (Math.random() - .5) * 30);
+      heartAt(x, y, { spread, delay: i * 70 });
+    }
+  }
+  function heartRain(n = 40){
+    for (let i = 0; i < n; i++){
+      heartAt(Math.random() * innerWidth, innerHeight * (.5 + Math.random() * .6),
+        { rise: innerHeight * (.6 + Math.random() * .5), spread: 160, delay: i * 60, scale: 1.2 });
+    }
+  }
+
+  /* ---------- música: tango sintetizado ---------- */
+  let ctx = null, master = null, wet = null, reed = null, muted = false;
+  const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+
+  function ensureAudio(){
+    if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return; }
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    ctx = new AC();
+    const comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -16; comp.ratio.value = 4;
+    master = ctx.createGain(); master.gain.value = muted ? 0 : .8;
+    master.connect(comp); comp.connect(ctx.destination);
+    // reverb de sala pequena
+    const len = ctx.sampleRate * 1.8, ir = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let c = 0; c < 2; c++){
+      const d = ir.getChannelData(c);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.2);
+    }
+    const conv = ctx.createConvolver(); conv.buffer = ir;
+    wet = ctx.createGain(); wet.gain.value = .22;
+    wet.connect(conv); conv.connect(master);
+    // timbre de palheta (bandoneón)
+    const h = [0, 1, .75, .55, .5, .32, .3, .2, .16, .12, .1, .08, .06, .05];
+    reed = ctx.createPeriodicWave(new Float32Array(h.length), new Float32Array(h));
+  }
+  function out(node){ node.connect(master); node.connect(wet); }
+
+  function bando(t, d, m, v = .16){
+    const g = ctx.createGain(), lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = 2600; lp.Q.value = .6;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(v, t + .035);
+    g.gain.setTargetAtTime(v * .8, t + .05, .3);
+    g.gain.setValueAtTime(v * .8, t + Math.max(.06, d - .05));
+    g.gain.linearRampToValueAtTime(0, t + d + .06);
+    const lfo = ctx.createOscillator(), lg = ctx.createGain();
+    lfo.frequency.value = 5.4; lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(d > .6 ? 9 : 2, t + Math.min(d, .5));
+    lfo.connect(lg);
+    [[1, -7, .5], [1, 7, .5], [.5, 3, .3]].forEach(([mul, det, gv]) => {
+      const o = ctx.createOscillator(), og = ctx.createGain();
+      o.setPeriodicWave(reed); o.frequency.value = hz(m) * mul; o.detune.value = det;
+      lg.connect(o.detune);
+      og.gain.value = gv; o.connect(og); og.connect(lp);
+      o.start(t); o.stop(t + d + .1);
+    });
+    lfo.start(t); lfo.stop(t + d + .1);
+    lp.connect(g); out(g);
+  }
+  function pluck(t, m, v, decay = .32, type = 'triangle'){
+    const o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), lp = ctx.createBiquadFilter();
+    o.type = type; o.frequency.value = hz(m);
+    o2.type = 'sine'; o2.frequency.value = hz(m) * 2;
+    const g2 = ctx.createGain(); g2.gain.value = .25;
+    lp.type = 'lowpass'; lp.frequency.setValueAtTime(3200, t); lp.frequency.exponentialRampToValueAtTime(700, t + decay);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .006);
+    g.gain.exponentialRampToValueAtTime(.0008, t + decay);
+    o.connect(lp); o2.connect(g2); g2.connect(lp); lp.connect(g); out(g);
+    o.start(t); o2.start(t); o.stop(t + decay + .05); o2.stop(t + decay + .05);
+  }
+  const chord = (t, notes, v = .05, dec = .28) => notes.forEach(n => pluck(t, n, v, dec));
+  const bass = (t, m, v = .32) => pluck(t, m, v, .42, 'sine');
+
+  const C = {
+    Dm: { b: 38, n: [57, 62, 65] }, Gm: { b: 43, n: [55, 58, 62] },
+    A7: { b: 45, n: [55, 61, 64] }, Bb: { b: 46, n: [58, 62, 65] }
+  };
+  const PROG = ['Dm', 'Gm', 'A7', 'Dm', 'Bb', 'Gm', 'A7', 'Dm'];
+  // [início em tempos, duração, nota MIDI]
+  const PHRASES = [
+    [ [[0,1.5,69],[1.5,.5,74],[2,1,77],[3,.5,76],[3.5,.5,74]],
+      [[0,.75,70],[.75,.25,69],[1,1,67],[2,1.5,74],[3.5,.5,70]],
+      [[0,1.5,73],[1.5,.5,76],[2,1,79],[3,.5,77],[3.5,.5,76]],
+      [[0,2,77],[2,.5,74],[2.5,.5,76],[3,.5,77],[3.5,.5,81]],
+      [[0,1.5,77],[1.5,.5,74],[2,1,70],[3,.5,74],[3.5,.5,77]],
+      [[0,1.5,79],[1.5,.25,77],[1.75,.25,76],[2,1,74],[3,1,70]],
+      [[0,.5,69],[.5,.5,73],[1,.5,76],[1.5,.5,79],[2,1.5,81],[3.5,.5,79]],
+      [[0,1.5,74]] ],
+    [ [[0,.5,74],[.5,.5,77],[1,2,81],[3,.5,79],[3.5,.5,77]],
+      [[0,1.5,79],[1.5,.5,82],[2,.5,81],[2.5,.5,79],[3,1,77]],
+      [[0,1.5,76],[1.5,.5,79],[2,1,82],[3,.5,81],[3.5,.5,79]],
+      [[0,3,81],[3,.5,77],[3.5,.5,76]],
+      [[0,.75,74],[.75,.25,77],[1,1.5,82],[2.5,.5,81],[3,.5,79],[3.5,.5,77]],
+      [[0,.5,79],[.5,.5,77],[1,.5,76],[1.5,.5,74],[2,2,70]],
+      [[0,1,73],[1,1,76],[2,1,81],[3,1,85]],
+      [[0,1.5,86]] ],
+    [ [[0,.25,74],[.5,.25,74],[1,.25,74],[1.5,.25,76],[2,.75,77],[2.75,.25,76],[3,1,74]],
+      [[0,.25,70],[.5,.25,70],[1,.25,70],[1.5,.25,72],[2,.75,74],[2.75,.25,72],[3,1,70]],
+      [[0,.25,69],[.5,.25,69],[1,.25,73],[1.5,.25,76],[2,.75,79],[2.75,.25,77],[3,1,76]],
+      [[0,.75,77],[.75,.25,76],[1,.5,74],[1.5,.5,69],[2,2,74]],
+      [[0,.25,77],[.5,.25,77],[1,.25,77],[1.5,.25,79],[2,.75,81],[2.75,.25,79],[3,1,77]],
+      [[0,.25,79],[.5,.25,79],[1,.25,79],[1.5,.25,81],[2,.75,82],[2.75,.25,81],[3,1,79]],
+      [[0,.25,76],[.5,.25,76],[1,.25,79],[1.5,.25,82],[2,1,81],[3,.5,79],[3.5,.5,76]],
+      [[0,.5,74],[.5,.5,69],[1,.75,74]] ]
+  ];
+
+  function schedulePhrase(p, t0){
+    const mel = PHRASES[p % PHRASES.length];
+    PROG.forEach((name, bar) => {
+      const c = C[name], tb = t0 + bar * 4 * BEAT, last = bar === 7;
+      mel[bar].forEach(([s, d, m]) => bando(tb + s * BEAT, d * BEAT, m));
+      if (last){
+        bass(tb, c.b); chord(tb, c.n, .045);
+        bass(tb + BEAT, c.b + 7); chord(tb + BEAT, c.n, .035);
+        // chan-chan!
+        const tA = tb + 2 * BEAT, tD = tb + 3 * BEAT;
+        bass(tA, 33, .4); bass(tA, 45, .25); chord(tA, [57, 61, 64, 67], .07, .22); bando(tA, .18, 73, .2);
+        bass(tD, 26, .45); bass(tD, 38, .3); chord(tD, [57, 62, 65, 69], .08, .3); bando(tD, .22, 74, .22);
+        return;
+      }
+      if (bar % 2 === 0){ // marcato em 4
+        [0, 1, 2, 3].forEach(k => {
+          bass(tb + k * BEAT, k === 2 ? c.b + 7 : c.b, k % 2 ? .24 : .34);
+          chord(tb + k * BEAT, c.n, k % 2 ? .032 : .05);
+        });
+      } else { // síncopa 3-3-2
+        [[0, c.b], [1.5, c.b], [3, c.b + 7]].forEach(([k, m]) => {
+          bass(tb + k * BEAT, m, .34); chord(tb + k * BEAT, c.n, .05);
+        });
+      }
+    });
+  }
+
+  /* ---------- coreografia ---------- */
+  const MOVES = ['m-caminata', 'm-ochos', 'm-giro', 'm-boleo'];
+  let state = 'idle', phrase = 0, timers = [], beatTimer = null;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const setClasses = (...cls) => scene.setAttribute('class', ['scene', ...cls].join(' '));
+
+  function startPhrase(){
+    ensureAudio();
+    state = 'dancing';
+    prompt.classList.add('hide');
+    ask.classList.remove('show');
+    boilEvery = 140;
+    const lead = 0.12;
+    if (ctx) schedulePhrase(phrase, ctx.currentTime + lead);
+    const ms = b => (lead + b * BEAT) * 1000;
+    const m1 = MOVES[(phrase * 2) % 4], m2 = MOVES[(phrase * 2 + 1) % 4];
+    later(ms(0), () => {
+      setClasses('dancing', m1);
+      heartsFromCouple(3);
+      beatTimer = setInterval(() => heartsFromCouple(1, 90), BEAT * 1000 * 2);
+    });
+    later(ms(16), () => setClasses('dancing', m2));
+    later(ms(30), () => { clearInterval(beatTimer); setClasses(); heartsFromCouple(3); });
+    later(ms(31), () => { setClasses('pose'); heartsFromCouple(12, 200); });
+    later(ms(32.6), () => {
+      state = 'paused'; boilEvery = 260; phrase++;
+      prompt.innerHTML = '<span>clique para continuar a dança ♥</span>';
+      prompt.classList.remove('hide');
+      if (phrase === 1) line.textContent = 'só tenho olhos pra você.';
+      if (phrase === 2) line.textContent = 'entre boa música, olhares e passos lentos…';
+      if (phrase >= 3 && !answered) ask.classList.add('show');
+    });
+  }
+
+  function hop(){
+    scene.classList.remove('hop'); void scene.getBoundingClientRect(); scene.classList.add('hop');
+    setTimeout(() => scene.classList.remove('hop'), 460);
+  }
+
+  paper.addEventListener('pointerdown', e => {
+    if (e.target.closest('button')) return;
+    if (state === 'dancing'){
+      for (let i = 0; i < 5; i++) heartAt(e.clientX, e.clientY, { delay: i * 50, spread: 140 });
+      if (scene.classList.contains('dancing') && !scene.classList.contains('m-giro')) hop();
+      return;
+    }
+    timers.forEach(clearTimeout); timers = [];
+    startPhrase();
+  });
+
+  let answered = false;
+  $('yes').addEventListener('click', e => {
+    e.stopPropagation();
+    answered = true;
+    ask.innerHTML = 'Então já tenho par pro tango ♥';
+    heartRain(50);
+    if (state !== 'dancing') { timers.forEach(clearTimeout); timers = []; startPhrase(); }
+  });
+
+  soundBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    muted = !muted;
+    soundBtn.innerHTML = muted ? '♪ <s>som</s>' : '♪ som';
+    if (master) master.gain.setTargetAtTime(muted ? 0 : .8, ctx.currentTime, .05);
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (!ctx) return;
+    document.hidden ? ctx.suspend() : ctx.resume();
+  });
+})();
+</script>
+</body>
+</html>
