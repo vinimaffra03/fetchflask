@@ -122,7 +122,7 @@
   .pose #owl{transform:translateX(4px) rotate(26deg)}
   .pose #tail{transform:rotate(-14deg)}
 
-  .hop #couple{animation:hop .45s cubic-bezier(.3,0,.3,1)}
+  .hop #bounce{animation:hop .45s cubic-bezier(.3,0,.3,1)}
 
   @keyframes bounce{0%{transform:translateY(-4px)}35%{transform:translateY(0)}}
   @keyframes swish{from{transform:rotate(-9deg)}to{transform:rotate(8deg)}}
@@ -486,7 +486,7 @@
 
   /* ---------- coreografia ---------- */
   const MOVES = ['m-caminata', 'm-ochos', 'm-giro', 'm-boleo'];
-  let state = 'idle', phrase = 0, timers = [], beatTimer = null;
+  let state = 'idle', phrase = 0, timers = [], beatTimer = null, answered = false;
   const later = (ms, fn) => timers.push(setTimeout(fn, ms));
   const setClasses = (...cls) => scene.setAttribute('class', ['scene', ...cls].join(' '));
 
@@ -527,14 +527,13 @@
     if (e.target.closest('button')) return;
     if (state === 'dancing'){
       for (let i = 0; i < 5; i++) heartAt(e.clientX, e.clientY, { delay: i * 50, spread: 140 });
-      if (scene.classList.contains('dancing') && !scene.classList.contains('m-giro')) hop();
+      if (scene.classList.contains('dancing')) hop();
       return;
     }
     timers.forEach(clearTimeout); timers = [];
     startPhrase();
   });
 
-  let answered = false;
   $('yes').addEventListener('click', e => {
     e.stopPropagation();
     answered = true;
